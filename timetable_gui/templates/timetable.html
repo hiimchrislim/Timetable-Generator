@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet"
+      type="text/css"
+      href="../css/jaja.css"/>
+
+<style type="text/css">
+    tr {
+        text-align: center;
+
+    }
+
+    tr:nth-of-type(2n) {
+        border: 1px solid black;
+        background-color: rgba(150, 150, 150, 0.5);
+        text-align: center;
+    }
+
+    td {
+        padding: 0px 0px;
+        border: 1px solid black;
+        text-align: center;
+        width: 100px;
+        height: 50px;
+        /*color: white;*/
+    }
+
+    container {
+        padding: 10px 100px;
+        padding-top: 56.25%;
+    }
+
+    /*table{*/
+    /*table-layout: fixed*/
+    /*}*/
+    /*td{*/
+    /*word-wrap:break-word;*/
+    /*}*/
+</style>
+
+<head>
+    <title>DataFrame Data</title>
+</head>
+<body>
+<div>
+    <input type="submit" value="Go Back" onClick="window.history.back();">
+    <input type="submit" value="Generate More Timetables" onClick="window.location.reload();">
+</div>
+<div class="container">
+    <div style="float: left">
+        <h1>Fall Timetable</h1>
+        {{data_frame | safe}}
+    </div>
+    <div style="float: left">
+        <h1>Winter Timetable</h1>
+        {{data_frame2 | safe}}
+    </div>
+</div>
+</body>
+</html>

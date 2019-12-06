@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block content %}
+<link href="{{ url_for('static', filename='timetable_gui/css/jaja.css') }}" rel="stylesheet">
+
+
+<form action="" method="post" novalidate>
+    <div>
+        <h1 style="color: darkgreen">Timetable Generator</h1>
+        H5 - UTM Campus <br>
+        CSC - Course Code <br>
+        209 - Course # <br>
+        20201 - Winter <br>
+        20199 - Fall <br>
+        Ex. CSC209H5S20201
+
+        <!--Action Attribute: Tells the browser the URL that should be used when submitting the info that the user entered in the form
+        If it's empty then it's submitted to the URl that is currently in the address bar-->
+        <!--Method Attribute: Specifies the HTTP request that should be used when submitting the form to the server-->
+        <!--novalidate AttributeL: Tells the browser to not apply validation to the fields in the form - it's optional (You can use this to test server-side validation later)-->
+        {{form.hidden_tag()}}
+        <!--form.hidden_tag(): Generates a hidden field that has a token that is used to protect against CSRF attacks.
+        To have the form protected you need to include the hidden field and have the SECRET_KEY variable in the flask configuration-->
+        {{form.course_textbox.label}}<br>
+        {{form.course_textbox(size=50, list="courses", placeholder="Search for your course here!")}}
+        <datalist id="courses">
+            <option value="CCT111H5S20201">
+            <option value="CSC209H5S20201">
+            <option value="MAT224H5S20201">
+            <option value="CSC263H5S20201">
+            <option value="CSC236H5F20199">
+            <option value="CSC207H5F20199">
+            <option value="CSC290H5F20199">
+            <option value="MAT232H5F20199">
+            <option value="MAT223H5F20199">
+            <option value="CSC258H5S20201">
+            <option value="AST201H5S20201">
+
+                <!---->
+                <!--<option value="ANT201H5S20201">-->
+                <!--<option value="ANT101H5F20195F">-->
+                <!--<option value="ANT101H5S20201">-->
+                <!--<option value="ANT102H5S20195S">-->
+                <!--<option value="ANT200H5F20199">-->
+                <!--<option value="ANT201H5S20201">-->
+                <!--<option value="ANT202H5F20195F">-->
+                <!--<option value="ANT202H5F20199">-->
+                <!--<option value="ANT202H5S20195S">-->
+                <!--<option value="ANT203H5F20195F">-->
+                <!--<option value="ANT203H5S20195S">-->
+                <!--<option value="ANT203H5S20201">-->
+                <!--<option value="ANT204H5F20199">-->
+                <!--<option value="ANT205H5F20199">-->
+                <!--<option value="ANT206H5S20201">-->
+                <!--<option value="ANT206H5S20201">-->
+                <!--<option value="ANT207H5S20201">-->
+                <!--<option value="ANT207H5Y20195">-->
+                <!--<option value="ANT209H5S20201">-->
+                <!--<option value="ANT210H5S20201">-->
+                <!--<option value="ANT211H5F20199">-->
+                <!--<option value="ANT214H5S20195S">-->
+                <!--<option value="ANT214H5S20201">-->
+                <!--<option value="ANT215H5F20199">-->
+                <!--<option value="ANT217H5F20195F">-->
+
+
+        </datalist>
+        <input type="submit" name="addCourse" value="Add Course">
+        <input type="submit" name="removeCourse" value="Remove Course">
+        <br>
+        <br>
+        Courses Added:
+        {% for course in courses %}
+        <li>{{course}}</li>
+        {% endfor %}
+    </div>
+    <div style="float: left">
+        <h2 style="color: darkorange">Fall Filter</h2>
+        Start Time
+        <input autocomplete="off" id="fall_ranges_start" type="range" value={{28800/3600}} min={{28800/3600}}
+               max={{77400/3600}}
+               name="fallStartTime" step=0.5 oninput="fall_ranges_amount_start.value=fall_ranges_start.value"/>
+        <input autocomplete="off" id="fall_ranges_amount_start" size=30 type="number" value={{28800/3600}}
+               min={{28800/3600}}
+               max={{77400/3600}} step=0.5 oninput="fall_ranges_start.value=fall_ranges_amount_start.value"/>
+        {% if "fall_ranges_amount_start.value"|int > 12 %}
+        {{ PM}}
+        {% else %}
+        {{ AM}}
+        {% endif %}
+        <br>
+        End Time
+        <input autocomplete="off" id="fall_ranges_end" type="range" value={{28800/3600}} min={{28800/3600}}
+               max={{77400/3600}}
+               name="fallEndTime" step=0.5 oninput="fall_ranges_amount_end.value=fall_ranges_end.value"/>
+        <input autocomplete="off" id="fall_ranges_amount_end" size=30 type="number" value={{28800/3600}}
+               min={{28800/3600}}
+               max={{77400/3600}} step=0.5 oninput="fall_ranges_end.value=fall_ranges_amount_end.value"/>
+        <br>
+        Max Courses Per Day
+        <input autocomplete="off" type="range" min="1" max="5" list="maxCoursesFall" name="fallMaxCourses" step="1"/>
+        <datalist id="maxCoursesFall">
+            <option value=1 label="1"></option>
+            <option value=2 label="2"></option>
+            <option value=3 label="3"></option>
+            <option value=4 label="4"></option>
+            <option value=5 label="5"></option>
+        </datalist>
+        <br>
+        Max Tutorials/Practicals Per Day
+        <input autocomplete="off" type="range" min="1" max="5" list="maxTutorialsPracticalsFall" name="fallMaxTutorialsPracticals"
+               step="1"/>
+        <datalist id="maxTutorialsPracticalsFall">
+            <option value=1 label="1"></option>
+            <option value=2 label="2"></option>
+            <option value=3 label="3"></option>
+            <option value=4 label="4"></option>
+            <option value=5 label="5"></option>
+        </datalist>
+        <br>
+        Lunch Time Start
+        <input autocomplete="off" id="fall_lunch_ranges_start" type="range" value={{28800/3600}} min={{28800/3600}} max={{77400/3600}}
+               name="fallLunchStartTime" step=0.5
+               oninput="fall_lunch_ranges_amount_start.value=fall_lunch_ranges_start.value"/>
+        <input autocomplete="off" id="fall_lunch_ranges_amount_start" size=30 type="number" value={{28800/3600}} min={{28800/3600}}
+               max={{77400/3600}} step=0.5
+               oninput="fall_lunch_ranges_start.value=fall_lunch_ranges_amount_start.value"/>
+        <br>
+        Lunch Time End
+        <input autocomplete="off" id="fall_lunch_ranges_end" type="range" value={{28800/3600}} min={{28800/3600}} max={{77400/3600}}
+               name="fallLunchEndTime" step=0.5
+               oninput="fall_lunch_ranges_amount_end.value=fall_lunch_ranges_end.value"/>
+        <input autocomplete="off" id="fall_lunch_ranges_amount_end" size=30 type="number" value={{28800/3600}} min={{28800/3600}}
+               max={{77400/3600}} step=0.5 oninput="fall_lunch_ranges_end.value=fall_lunch_ranges_amount_end.value"/>
+        <br>
+        <!--{{form.days_removal_textbox_fall.label}}<br>-->
+        <br>
+        {{form.days_removal_textbox_fall(size=50, list="daysExcludedFall", placeholder="Exclude days here!")}}
+        <datalist id="daysExcludedFall">
+            <option value="MONDAY">
+            <option value="TUESDAY">
+            <option value="WEDNESDAY">
+            <option value="THURSDAY">
+            <option value="FRIDAY">
+        </datalist>
+        <input type="submit" name="excludeDayFall" value="Add Excluded Day">
+        <input type="submit" name="removeDayFall" value="Remove Excluded Day">
+        <br>
+        <br>
+        Days Excluded:
+        {% for day_excluded in days_excluded_fall %}
+        <li>{{day_excluded}}</li>
+        {% endfor %}
+        <br>
+        <br>
+    </div>
+    <div style="float: right">
+        <h2 style="color: dodgerblue">Winter Filter</h2>
+        Start Time
+        <input autocomplete="off" id="winter_ranges_start" type="range" value={{28800/3600}} min={{28800/3600}} max={{77400/3600}}
+               name="winterStartTime" step=0.5 oninput="winter_ranges_amount_start.value=winter_ranges_start.value"/>
+        <input autocomplete="off" id="winter_ranges_amount_start" size=30 type="number" value={{28800/3600}} min={{28800/3600}}
+               max={{77400/3600}} step=0.5 oninput="winter_ranges_start.value=winter_ranges_amount_start.value"/>
+        <br>
+        End Time
+        <input autocomplete="off" id="winter_ranges_end" type="range" value={{28800/3600}} min={{28800/3600}} max={{77400/3600}}
+               name="winterEndTime" step=0.5 oninput="winter_ranges_amount_end.value=winter_ranges_end.value"/>
+        <input autocomplete="off" id="winter_ranges_amount_end" size=30 type="number" value={{28800/3600}} min={{28800/3600}}
+               max={{77400/3600}} step=0.5 oninput="winter_ranges_end.value=winter_ranges_amount_end.value"/>
+        <br>
+        Max Courses Per Day
+        <input autocomplete="off" type="range" min="1" max="5" step="1" list="maxCoursesWinter" name="winterMaxCourses"/>
+        <datalist id="maxCoursesWinter">
+            <option value=1 label="1"></option>
+            <option value=2 label="2"></option>
+            <option value=3 label="3"></option>
+            <option value=4 label="4"></option>
+            <option value=5 label="5"></option>
+        </datalist>
+        <br>
+        Max Tutorials/Practicals Per Day
+        <input autocomplete="off" type="range" min="1" max="5" list="maxTutorialsPracticalsWinter" step="1"
+               name="winterMaxTutorialsPracticals"/>
+        <datalist id="maxTutorialsPracticalsWinter">
+            <option value=1 label="1"></option>
+            <option value=2 label="2"></option>
+            <option value=3 label="3"></option>
+            <option value=4 label="4"></option>
+            <option value=5 label="5"></option>
+        </datalist>
+        <br>
+        Lunch Time Start
+        <input autocomplete="off" id="winter_lunch_ranges_start" type="range" value={{28800/3600}} min={{28800/3600}} max={{77400/3600}}
+               name="winterLunchStartTime" step=0.5
+               oninput="winter_lunch_ranges_amount_start.value=winter_lunch_ranges_start.value"/>
+        <input autocomplete="off" id="winter_lunch_ranges_amount_start" size=30 type="number" value={{28800/3600}} min={{28800/3600}}
+               max={{77400/3600}} step=0.5
+               oninput="winter_lunch_ranges_start.value=winter_lunch_ranges_amount_start.value"/>
+        <br>
+        Lunch Time End
+        <input autocomplete="off" id="winter_lunch_ranges_end" type="range" value={{28800/3600}} min={{28800/3600}} max={{77400/3600}}
+               name="winterLunchEndTime" step=0.5
+               oninput="winter_lunch_ranges_amount_end.value=winter_lunch_ranges_end.value"/>
+        <input autocomplete="off" id="winter_lunch_ranges_amount_end" size=30 type="number" value={{28800/3600}} min={{28800/3600}}
+               max={{77400/3600}} step=0.5
+               oninput="winter_lunch_ranges_end.value=winter_lunch_ranges_amount_end.value"/>
+        <br>
+        <!--{{form.days_removal_textbox_winter.label}}<br>-->
+        <br>
+        {{form.days_removal_textbox_winter(size=50, list="daysExcludedWinter", placeholder="Exclude days here!")}}
+        <datalist id="daysExcludedWinter">
+            <option value="MONDAY">
+            <option value="TUESDAY">
+            <option value="WEDNESDAY">
+            <option value="THURSDAY">
+            <option value="FRIDAY">
+        </datalist>
+        <input type="submit" name="excludeDayWinter" value="Add Excluded Day">
+        <input type="submit" name="removeDayWinter" value="Remove Excluded Day">
+        <br>
+        <br>Days Excluded:
+        {% for day_excluded in days_excluded_winter %}
+        <li>{{day_excluded}}</li>
+        {% endfor %}
+        <br>
+        <br>
+        <input type="submit" name="generateTimetable" value="Generate Timetable">
+        <!--<div class="panel-body">-->
+        <!--<input type="submit" name="action" value="Add Course">-->
+        <!--</div>-->
+        <!--<div class="panel-body">-->
+        <!--<input type="submit" name="action" value="Generate Timetable">-->
+        <!--</div>-->
+        {% for error in form.course_textbox.errors %}
+        <span style="color: red;">[{{error}}]</span>
+        {% endfor %}
+
+        By Chris Lim. All Rights Reserved. Copyright © 2019.
+    </div>
+</form>
+<!--{% with messages = get_flashed_messages() %}-->
+<!--{% if messages %}-->
+<!--{% for message in messages %}-->
+<!--{{message}}-->
+<!--{% endfor %}-->
+<!--{% endif %}-->
+<!--{% endwith %}-->
+
+<!--{% endblock %}-->
+
+
+
+
+
+
+
+
