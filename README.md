@@ -3,6 +3,11 @@ Website: https://climdev.pythonanywhere.com/
 <br>
 Version: 1.0 (Beta)
 
+# Technologies Used
+- Python
+- Flask
+- Pandas
+
 # Description
 This web app will generate custom timetables for students attending the University of Toronto (Mississauga Campus) eliminating the manual work of students trying to create a custom timetable for themselves
 
@@ -30,6 +35,11 @@ Check the version history for more info.
 [Add a description of a potential feature that you would like to see in the future][error-feature-link]
 
 [error-feature-link]: https://github.com/ColdxBreaker/Timetable-Generator/issues/new
+
+# Updates
+I will be using these technologies in a future update (For the frontend)
+- React.js
+- Typescript
 
 # Credits
 Created by Chris Lim
